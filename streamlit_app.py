@@ -114,19 +114,18 @@ if positions:
                 pos_df["side"] = pos_df["market_value"].apply(lambda v: "Short" if v < 0 else "Long")
                 chart_df = pos_df.set_index("symbol")["abs_value"]
                 st.subheader("Holdings Allocation")
-                st.caption("Ring chart based on absolute market value (long vs short coloring).")
-                colors = ["#34d399" if s == "Long" else "#f87171" for s in pos_df["side"]]
+                st.caption("Ring chart based on absolute market value. Shorts are slightly separated.")
 
                 # Add cash as a slice if available
                 cash_value = summary.get("cash")
+                chart_labels = chart_df.index.tolist()
+                chart_values = chart_df.values.tolist()
+                chart_pulls = [0.08 if s == "Short" else 0.0 for s in pos_df["side"]]
+
                 if cash_value is not None:
-                    chart_labels = chart_df.index.tolist() + ["CASH"]
-                    chart_values = chart_df.values.tolist() + [abs(float(cash_value))]
-                    chart_colors = colors + ["#94a3b8"]
-                else:
-                    chart_labels = chart_df.index.tolist()
-                    chart_values = chart_df.values.tolist()
-                    chart_colors = colors
+                    chart_labels.append("CASH")
+                    chart_values.append(abs(float(cash_value)))
+                    chart_pulls.append(0.0)
 
                 long_count = int((pos_df["side"] == "Long").sum())
                 short_count = int((pos_df["side"] == "Short").sum())
@@ -140,7 +139,7 @@ if positions:
                                 "values": chart_values,
                                 "type": "pie",
                                 "hole": 0.5,
-                                "marker": {"colors": chart_colors},
+                                "pull": chart_pulls,
                                 "hovertemplate": "%{label}<br>$%{value:,.2f}<br>%{percent}<extra></extra>",
                             }
                         ],
