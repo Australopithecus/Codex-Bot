@@ -111,17 +111,37 @@ if positions:
             pos_df = pos_df[pos_df["market_value"] != 0]
             if not pos_df.empty:
                 pos_df["abs_value"] = pos_df["market_value"].abs()
+                pos_df["side"] = pos_df["market_value"].apply(lambda v: "Short" if v < 0 else "Long")
                 chart_df = pos_df.set_index("symbol")["abs_value"]
                 st.subheader("Holdings Allocation")
-                st.caption("Ring chart based on absolute market value.")
+                st.caption("Ring chart based on absolute market value (long vs short coloring).")
+                colors = ["#34d399" if s == "Long" else "#f87171" for s in pos_df["side"]]
+
+                # Add cash as a slice if available
+                cash_value = summary.get("cash")
+                if cash_value is not None:
+                    chart_labels = chart_df.index.tolist() + ["CASH"]
+                    chart_values = chart_df.values.tolist() + [abs(float(cash_value))]
+                    chart_colors = colors + ["#94a3b8"]
+                else:
+                    chart_labels = chart_df.index.tolist()
+                    chart_values = chart_df.values.tolist()
+                    chart_colors = colors
+
+                long_count = int((pos_df["side"] == "Long").sum())
+                short_count = int((pos_df["side"] == "Short").sum())
+                st.caption(f"Legend counts — Long: {long_count} | Short: {short_count}")
+
                 st.plotly_chart(
                     {
                         "data": [
                             {
-                                "labels": chart_df.index.tolist(),
-                                "values": chart_df.values.tolist(),
+                                "labels": chart_labels,
+                                "values": chart_values,
                                 "type": "pie",
                                 "hole": 0.5,
+                                "marker": {"colors": chart_colors},
+                                "hovertemplate": "%{label}<br>$%{value:,.2f}<br>%{percent}<extra></extra>",
                             }
                         ],
                         "layout": {"showlegend": True},
