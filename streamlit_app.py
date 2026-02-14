@@ -102,6 +102,34 @@ advisor = fetch("/api/advisor").get("data", [])
 st.subheader("Positions")
 if positions:
     st.dataframe(positions, use_container_width=True)
+
+    try:
+        import pandas as pd
+        pos_df = pd.DataFrame(positions)
+        if "market_value" in pos_df.columns:
+            pos_df["market_value"] = pd.to_numeric(pos_df["market_value"], errors="coerce").fillna(0.0)
+            pos_df = pos_df[pos_df["market_value"] != 0]
+            if not pos_df.empty:
+                pos_df["abs_value"] = pos_df["market_value"].abs()
+                chart_df = pos_df.set_index("symbol")["abs_value"]
+                st.subheader("Holdings Allocation")
+                st.caption("Ring chart based on absolute market value.")
+                st.plotly_chart(
+                    {
+                        "data": [
+                            {
+                                "labels": chart_df.index.tolist(),
+                                "values": chart_df.values.tolist(),
+                                "type": "pie",
+                                "hole": 0.5,
+                            }
+                        ],
+                        "layout": {"showlegend": True},
+                    },
+                    use_container_width=True,
+                )
+    except Exception:
+        pass
 else:
     st.caption("No positions logged yet.")
 
