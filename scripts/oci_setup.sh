@@ -15,7 +15,7 @@ sudo apt-get install -y python3-venv python3-pip ufw
 
 python3 -m venv "$APP_DIR/.venv"
 "$APP_DIR/.venv/bin/pip" install --upgrade pip
-"$APP_DIR/.venv/bin/pip" install -r "$APP_DIR/requirements.txt"
+"$APP_DIR/.venv/bin/pip" install -r "$APP_DIR/requirements.bot.txt"
 
 "$APP_DIR/.venv/bin/python" "$APP_DIR/scripts/setup_env.py"
 

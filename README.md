@@ -11,7 +11,7 @@ A Python-based paper-trading bot that trains on one year of Alpaca historical da
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.bot.txt
 ```
 
 2. Copy environment variables:
@@ -71,7 +71,7 @@ DASHBOARD_HOST=0.0.0.0 DASHBOARD_PORT=8000 python3 -m broker_bot.cli dashboard-w
 
 ### Streamlit (GitHub + Community Cloud)
 
-You can deploy the UI via Streamlit Community Cloud using `streamlit_app.py`.
+You can deploy the UI via Streamlit Community Cloud using `streamlit_app.py`. The Streamlit app uses `requirements.txt` (minimal).
 
 1. Push the repo to GitHub.
 2. In Streamlit Community Cloud, select:
