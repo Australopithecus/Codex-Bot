@@ -43,6 +43,8 @@ def load_config() -> Config:
     secret_key = os.getenv("ALPACA_SECRET_KEY", "").strip()
     paper_url = os.getenv("ALPACA_PAPER_URL", "https://paper-api.alpaca.markets").strip()
     data_feed = os.getenv("ALPACA_DATA_FEED", "iex").strip()
+    if not data_feed:
+        data_feed = "iex"
     overrides_path = os.getenv("ADVISOR_OVERRIDES_PATH", "data/advisor_overrides.json").strip()
     auto_apply_flag = os.getenv("ADVISOR_AUTO_APPLY", "1").strip().lower() in {"1", "true", "yes", "y"}
     sector_map_path = os.getenv("SECTOR_MAP_PATH", "data/sector_map.csv").strip()
