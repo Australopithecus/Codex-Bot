@@ -1,0 +1,7 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+*.sqlite
+data/models/
+data/advisor_overrides.json

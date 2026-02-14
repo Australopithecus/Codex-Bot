@@ -1,0 +1,68 @@
+name: Advisor Snapshot
+
+on:
+  schedule:
+    # 4:15pm ET = 21:15 UTC during standard time (winter)
+    - cron: "15 21 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  advisor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Restore DB from snapshot
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_PAPER_URL: ${{ secrets.ALPACA_PAPER_URL }}
+          ALPACA_DATA_FEED: ${{ secrets.ALPACA_DATA_FEED }}
+        run: |
+          python scripts/restore_db_from_snapshot.py
+
+      - name: Run snapshot + advisor
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_PAPER_URL: ${{ secrets.ALPACA_PAPER_URL }}
+          ALPACA_DATA_FEED: ${{ secrets.ALPACA_DATA_FEED }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LLM_ENABLED: ${{ secrets.LLM_ENABLED }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          UNIVERSE_PATH: data/sp500.csv
+          BROKER_BOT_DB: data/broker_bot.sqlite
+          MODEL_DIR: data/models
+        run: |
+          python -m broker_bot.cli snapshot
+          python -m broker_bot.cli advisor-report
+          python scripts/build_snapshot.py
+
+      - name: Commit snapshot
+        run: |
+          git config user.name "broker-bot"
+          git config user.email "broker-bot@users.noreply.github.com"
+          git add data/dashboard_snapshot.json
+          if git diff --cached --quiet; then
+            echo "No snapshot changes to commit."
+            exit 0
+          fi
+          git commit -m "Update dashboard snapshot"
+          git push
