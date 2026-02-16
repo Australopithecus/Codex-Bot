@@ -71,19 +71,53 @@ col6.metric("Tracking Error", "--")
 equity = fetch("/api/equity").get("data", [])
 if equity:
     import pandas as pd
+
     df = pd.DataFrame(equity)
     df["ts"] = pd.to_datetime(df["ts"])
     df = df.set_index("ts")
     st.subheader("Equity vs SPY")
-    if "spy" in df.columns and df["spy"].notna().sum() > 1:
-        base_equity = df["equity"].iloc[0]
-        spy_norm = (df["spy"] / df["spy"].iloc[0]) * base_equity
-        chart_df = df[["equity"]].copy()
+
+    range_options = {
+        "24h": pd.Timedelta(hours=24),
+        "7 days": pd.Timedelta(days=7),
+        "28 days": pd.Timedelta(days=28),
+        "90 days": pd.Timedelta(days=90),
+        "180 days": pd.Timedelta(days=180),
+        "1 year": pd.Timedelta(days=365),
+        "All": None,
+    }
+    selected_range = st.radio(
+        "X-axis range",
+        options=list(range_options.keys()),
+        index=3,
+        horizontal=True,
+    )
+
+    chart_source = df.copy()
+    lookback = range_options[selected_range]
+    if lookback is not None and not chart_source.empty:
+        cutoff = chart_source.index.max() - lookback
+        chart_source = chart_source[chart_source.index >= cutoff]
+
+    if chart_source.empty:
+        st.caption("No equity points in the selected range yet.")
+        chart_source = df.copy()
+
+    st.caption(
+        f"Window: {chart_source.index.min().strftime('%Y-%m-%d %H:%M')} to "
+        f"{chart_source.index.max().strftime('%Y-%m-%d %H:%M')}"
+    )
+
+    if "spy" in chart_source.columns and chart_source["spy"].notna().sum() > 1:
+        base_equity = chart_source["equity"].iloc[0]
+        spy_base = chart_source["spy"].dropna().iloc[0]
+        spy_norm = (chart_source["spy"] / spy_base) * base_equity
+        chart_df = chart_source[["equity"]].copy()
         chart_df["spy"] = spy_norm
         st.line_chart(chart_df)
 
         # Alpha and tracking error (20D)
-        window = chart_df.dropna().tail(21)
+        window = df[["equity", "spy"]].dropna().tail(21)
         if len(window) >= 21:
             bot_ret = window["equity"].iloc[-1] / window["equity"].iloc[0] - 1
             spy_ret = window["spy"].iloc[-1] / window["spy"].iloc[0] - 1
@@ -93,7 +127,7 @@ if equity:
             col5.metric("Alpha 20D", f"{alpha * 100:.2f}%")
             col6.metric("Tracking Error", f"{tracking_error * 100:.2f}%")
     else:
-        st.line_chart(df[["equity"]])
+        st.line_chart(chart_source[["equity"]])
 
 positions = fetch("/api/positions").get("data", [])
 trades = fetch("/api/trades").get("data", [])
