@@ -1,8 +1,15 @@
 {
-  "generated_at": "2026-02-14T06:05:35.296551+00:00",
+  "generated_at": "2026-02-16T20:18:02.757955+00:00",
   "equity": [
     {
       "ts": "2026-02-14T06:05:33.248912+00:00",
+      "equity": 97865.88,
+      "cash": 68712.16,
+      "portfolio_value": 97865.88,
+      "spy_value": 681.61
+    },
+    {
+      "ts": "2026-02-16T20:18:00.955359+00:00",
       "equity": 97865.88,
       "cash": 68712.16,
       "portfolio_value": 97865.88,
@@ -73,9 +80,82 @@
       "avg_entry_price": 139.21053,
       "market_value": 12888.600945,
       "unrealized_pl": 802.181488
+    },
+    {
+      "symbol": "AAPL",
+      "qty": -44.0,
+      "avg_entry_price": 269.46,
+      "market_value": -11254.32,
+      "unrealized_pl": 601.92
+    },
+    {
+      "symbol": "AMZN",
+      "qty": 49.44,
+      "avg_entry_price": 244.412079,
+      "market_value": 9828.1776,
+      "unrealized_pl": -2255.555586
+    },
+    {
+      "symbol": "GOOGL",
+      "qty": 34.927965094,
+      "avg_entry_price": 347.669068,
+      "market_value": 10678.177489,
+      "unrealized_pl": -1465.195582
+    },
+    {
+      "symbol": "JPM",
+      "qty": 38.967531152,
+      "avg_entry_price": 312.773818,
+      "market_value": 11789.62655,
+      "unrealized_pl": -398.396946
+    },
+    {
+      "symbol": "META",
+      "qty": -8.0,
+      "avg_entry_price": 709.26,
+      "market_value": -5118.16,
+      "unrealized_pl": 555.92
+    },
+    {
+      "symbol": "MSFT",
+      "qty": -14.0,
+      "avg_entry_price": 424.549286,
+      "market_value": -5618.48,
+      "unrealized_pl": 325.21
+    },
+    {
+      "symbol": "NVDA",
+      "qty": 64.678629752,
+      "avg_entry_price": 185.675535,
+      "market_value": 11823.900305,
+      "unrealized_pl": -185.338877
+    },
+    {
+      "symbol": "UNH",
+      "qty": -20.0,
+      "avg_entry_price": 285.91,
+      "market_value": -5863.8,
+      "unrealized_pl": -145.6
+    },
+    {
+      "symbol": "XOM",
+      "qty": 86.821158266,
+      "avg_entry_price": 139.21053,
+      "market_value": 12888.600945,
+      "unrealized_pl": 802.181488
     }
   ],
   "advisor_reports": [
+    {
+      "ts": "2026-02-16T20:18:02.532490+00:00",
+      "headline": "Not enough data",
+      "summary": "Need more equity snapshots before generating a meaningful report.",
+      "suggestions": [
+        "Run daily snapshots and rebalances to build history."
+      ],
+      "metrics": {},
+      "overrides": {}
+    },
     {
       "ts": "2026-02-14T06:05:35.046918+00:00",
       "headline": "Not enough data",
