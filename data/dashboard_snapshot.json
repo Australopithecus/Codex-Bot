@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-02-16T21:42:39.669543+00:00",
+  "generated_at": "2026-02-17T21:47:49.787650+00:00",
   "equity": [
     {
       "ts": "2026-02-14T06:05:33.248912+00:00",
@@ -21,10 +21,80 @@
       "cash": 68712.16,
       "portfolio_value": 97865.88,
       "spy_value": 681.61
+    },
+    {
+      "ts": "2026-02-17T21:47:47.782579+00:00",
+      "equity": 97790.74,
+      "cash": 68712.16,
+      "portfolio_value": 97790.74,
+      "spy_value": 682.76
     }
   ],
   "trades": [],
   "positions": [
+    {
+      "symbol": "AAPL",
+      "qty": -44.0,
+      "avg_entry_price": 269.46,
+      "market_value": -11638.0,
+      "unrealized_pl": 218.24
+    },
+    {
+      "symbol": "AMZN",
+      "qty": 49.44,
+      "avg_entry_price": 244.412079,
+      "market_value": 9927.561888,
+      "unrealized_pl": -2156.171298
+    },
+    {
+      "symbol": "GOOGL",
+      "qty": 34.927965094,
+      "avg_entry_price": 347.669068,
+      "market_value": 10508.427578,
+      "unrealized_pl": -1634.945493
+    },
+    {
+      "symbol": "JPM",
+      "qty": 38.967531152,
+      "avg_entry_price": 312.773818,
+      "market_value": 11963.032064,
+      "unrealized_pl": -224.991432
+    },
+    {
+      "symbol": "META",
+      "qty": -8.0,
+      "avg_entry_price": 709.26,
+      "market_value": -5173.6,
+      "unrealized_pl": 500.48
+    },
+    {
+      "symbol": "MSFT",
+      "qty": -14.0,
+      "avg_entry_price": 424.549286,
+      "market_value": -5551.98,
+      "unrealized_pl": 391.71
+    },
+    {
+      "symbol": "NVDA",
+      "qty": 64.678629752,
+      "avg_entry_price": 185.675535,
+      "market_value": 12111.073421,
+      "unrealized_pl": 101.834239
+    },
+    {
+      "symbol": "UNH",
+      "qty": -20.0,
+      "avg_entry_price": 285.91,
+      "market_value": -5769.0,
+      "unrealized_pl": -50.8
+    },
+    {
+      "symbol": "XOM",
+      "qty": 86.821158266,
+      "avg_entry_price": 139.21053,
+      "market_value": 12701.067243,
+      "unrealized_pl": 614.647786
+    },
     {
       "symbol": "AAPL",
       "qty": -44.0,
@@ -216,6 +286,16 @@
     }
   ],
   "advisor_reports": [
+    {
+      "ts": "2026-02-17T21:47:49.564522+00:00",
+      "headline": "Not enough data",
+      "summary": "Need more equity snapshots before generating a meaningful report.",
+      "suggestions": [
+        "Run daily snapshots and rebalances to build history."
+      ],
+      "metrics": {},
+      "overrides": {}
+    },
     {
       "ts": "2026-02-16T21:42:39.443912+00:00",
       "headline": "Not enough data",
