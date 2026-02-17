@@ -158,6 +158,14 @@ if equity:
     try:
         import plotly.graph_objects as go
 
+        overlap_with_spy = False
+        if "spy" in plot_df.columns:
+            aligned = plot_df[["equity", "spy"]].dropna()
+            if not aligned.empty:
+                max_diff = (aligned["equity"] - aligned["spy"]).abs().max()
+                scale = max(float(aligned["equity"].abs().max()), 1.0)
+                overlap_with_spy = max_diff <= (scale * 1e-6)
+
         fig = go.Figure()
         fig.add_trace(
             go.Scatter(
@@ -165,15 +173,21 @@ if equity:
                 y=plot_df["equity"],
                 mode="lines+markers",
                 name="Bot",
+                line={"width": 3, "color": "#1f77b4"},
+                marker={"size": 7},
             )
         )
         if "spy" in plot_df.columns:
+            spy_mode = "markers" if overlap_with_spy else "lines+markers"
             fig.add_trace(
                 go.Scatter(
                     x=plot_df.index,
                     y=plot_df["spy"],
-                    mode="lines+markers",
+                    mode=spy_mode,
                     name="S&P 500 (normalized)",
+                    line={"width": 2, "dash": "dot", "color": "#79bdf2"},
+                    marker={"size": 10 if overlap_with_spy else 7, "symbol": "x"},
+                    opacity=0.85,
                 )
             )
         fig.update_layout(
@@ -182,6 +196,8 @@ if equity:
             legend={"orientation": "h", "y": 1.02, "x": 0},
         )
         st.plotly_chart(fig, use_container_width=True)
+        if overlap_with_spy:
+            st.caption("Bot and S&P 500 are nearly identical in this window; S&P is shown as X markers so both remain visible.")
     except Exception:
         st.line_chart(plot_df)
 
