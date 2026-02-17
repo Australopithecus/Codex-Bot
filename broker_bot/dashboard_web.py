@@ -55,7 +55,12 @@ def create_app(db_path: str) -> FastAPI:
     @app.get("/api/equity")
     def equity(request: Request) -> JSONResponse:
         _check_token(request)
-        rows = read_latest_equity(db_path, limit=180)
+        try:
+            limit = int(request.query_params.get("limit", "1000"))
+        except ValueError:
+            limit = 1000
+        limit = max(1, min(limit, 5000))
+        rows = read_latest_equity(db_path, limit=limit)
         rows = list(reversed(rows))
         data = [
             {
