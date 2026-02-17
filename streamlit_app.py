@@ -1,5 +1,6 @@
 import os
 import json
+from urllib.parse import urlsplit
 import requests
 import streamlit as st
 
@@ -13,6 +14,7 @@ st.title("Broker Bot Dashboard")
 st.caption("Streamlit UI (reads from the Broker Bot API)")
 
 def fetch(path: str):
+    route = urlsplit(path).path
     if API_BASE:
         headers = {"X-API-Token": API_TOKEN} if API_TOKEN else {}
         url = API_BASE.rstrip("/") + path
@@ -23,7 +25,7 @@ def fetch(path: str):
         resp = requests.get(DATA_URL, timeout=15)
         resp.raise_for_status()
         data = resp.json()
-        if path == "/api/summary":
+        if route == "/api/summary":
             equity = data.get("equity", [])
             if not equity:
                 return {"status": "empty", "message": "No equity snapshots yet."}
@@ -36,13 +38,23 @@ def fetch(path: str):
                 "portfolio": latest.get("portfolio_value", 0.0),
                 "spy": latest.get("spy_value"),
             }
-        if path == "/api/equity":
-            return {"data": data.get("equity", [])}
-        if path == "/api/positions":
+        if route == "/api/equity":
+            rows = data.get("equity", [])
+            normalized = []
+            for row in rows:
+                normalized.append(
+                    {
+                        "ts": row.get("ts"),
+                        "equity": row.get("equity"),
+                        "spy": row.get("spy", row.get("spy_value")),
+                    }
+                )
+            return {"data": normalized}
+        if route == "/api/positions":
             return {"data": data.get("positions", [])}
-        if path == "/api/trades":
+        if route == "/api/trades":
             return {"data": data.get("trades", [])}
-        if path == "/api/advisor":
+        if route == "/api/advisor":
             return {"data": data.get("advisor_reports", [])}
         return {}
     st.error("Set API_BASE_URL or DATA_URL in Streamlit secrets.")
@@ -68,14 +80,28 @@ col5.metric("Alpha 20D", "--")
 col6.metric("Tracking Error", "--")
 
 
-equity = fetch("/api/equity").get("data", [])
+equity = fetch("/api/equity?limit=1000").get("data", [])
 if equity:
     import pandas as pd
 
     df = pd.DataFrame(equity)
+    if "spy" not in df.columns and "spy_value" in df.columns:
+        df["spy"] = df["spy_value"]
+    df["equity"] = pd.to_numeric(df["equity"], errors="coerce")
+    if "spy" in df.columns:
+        df["spy"] = pd.to_numeric(df["spy"], errors="coerce")
     df["ts"] = pd.to_datetime(df["ts"])
+    df = df.dropna(subset=["ts", "equity"]).sort_values("ts")
     df = df.set_index("ts")
+    df = df[~df.index.duplicated(keep="last")]
     st.subheader("Equity vs SPY")
+
+    coverage_days = max((df.index.max() - df.index.min()).days, 0)
+    coverage_label = (
+        f"Data coverage: {coverage_days} day(s) • {len(df)} point(s) • "
+        f"latest: {df.index.max().strftime('%Y-%m-%d %H:%M')}"
+    )
+    st.caption(coverage_label)
 
     range_options = {
         "24h": pd.Timedelta(hours=24),
@@ -105,16 +131,18 @@ if equity:
 
     st.caption(
         f"Window: {chart_source.index.min().strftime('%Y-%m-%d %H:%M')} to "
-        f"{chart_source.index.max().strftime('%Y-%m-%d %H:%M')}"
+        f"{chart_source.index.max().strftime('%Y-%m-%d %H:%M')} "
+        f"({len(chart_source)} points)"
     )
+    if len(chart_source) < 3:
+        st.info("Limited history in this window, so the curve may look flat or sparse.")
 
+    plot_df = chart_source[["equity"]].copy()
     if "spy" in chart_source.columns and chart_source["spy"].notna().sum() > 1:
         base_equity = chart_source["equity"].iloc[0]
         spy_base = chart_source["spy"].dropna().iloc[0]
         spy_norm = (chart_source["spy"] / spy_base) * base_equity
-        chart_df = chart_source[["equity"]].copy()
-        chart_df["spy"] = spy_norm
-        st.line_chart(chart_df)
+        plot_df["spy"] = spy_norm
 
         # Alpha and tracking error (20D)
         window = df[["equity", "spy"]].dropna().tail(21)
@@ -126,8 +154,36 @@ if equity:
             tracking_error = diffs.std()
             col5.metric("Alpha 20D", f"{alpha * 100:.2f}%")
             col6.metric("Tracking Error", f"{tracking_error * 100:.2f}%")
-    else:
-        st.line_chart(chart_source[["equity"]])
+
+    try:
+        import plotly.graph_objects as go
+
+        fig = go.Figure()
+        fig.add_trace(
+            go.Scatter(
+                x=plot_df.index,
+                y=plot_df["equity"],
+                mode="lines+markers",
+                name="Bot",
+            )
+        )
+        if "spy" in plot_df.columns:
+            fig.add_trace(
+                go.Scatter(
+                    x=plot_df.index,
+                    y=plot_df["spy"],
+                    mode="lines+markers",
+                    name="S&P 500 (normalized)",
+                )
+            )
+        fig.update_layout(
+            height=360,
+            margin={"l": 10, "r": 10, "t": 10, "b": 10},
+            legend={"orientation": "h", "y": 1.02, "x": 0},
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    except Exception:
+        st.line_chart(plot_df)
 
 positions = fetch("/api/positions").get("data", [])
 trades = fetch("/api/trades").get("data", [])
