@@ -180,15 +180,30 @@ def _call_llm(config: Config, context: dict) -> dict | None:
         + ". Keep tweaks small and explainable."
     )
     user = json.dumps(context)
-    response = client.responses.create(
-        model=model,
-        input=[
+    request_kwargs = {
+        "model": model,
+        "input": [
             {"role": "system", "content": system},
             {"role": "user", "content": user},
         ],
-        temperature=0.2,
-        max_output_tokens=500,
-    )
+        "max_output_tokens": 500,
+    }
+    # GPT-5 models in the Responses API do not accept temperature.
+    if not model.lower().startswith("gpt-5"):
+        request_kwargs["temperature"] = 0.2
+
+    try:
+        response = client.responses.create(**request_kwargs)
+    except Exception as exc:
+        message = str(exc).lower()
+        if "temperature" in message and "unsupported" in message and "temperature" in request_kwargs:
+            request_kwargs.pop("temperature", None)
+            try:
+                response = client.responses.create(**request_kwargs)
+            except Exception:
+                return None
+        else:
+            return None
     text = response.output_text or ""
     start = text.find("{")
     end = text.rfind("}")
