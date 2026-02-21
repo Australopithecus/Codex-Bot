@@ -164,7 +164,7 @@ def _call_llm(config: Config, context: dict) -> dict | None:
         return None
     if not os.getenv("LLM_ENABLED", "0").strip().lower() in {"1", "true", "yes", "y"}:
         return None
-    model = os.getenv("LLM_MODEL", "gpt-5-mini")
+    model = os.getenv("LLM_MODEL", "gpt-5-mini").strip()
     try:
         from openai import OpenAI
     except Exception:
@@ -188,15 +188,12 @@ def _call_llm(config: Config, context: dict) -> dict | None:
         ],
         "max_output_tokens": 500,
     }
-    # GPT-5 models in the Responses API do not accept temperature.
-    if not model.lower().startswith("gpt-5"):
-        request_kwargs["temperature"] = 0.2
-
     try:
         response = client.responses.create(**request_kwargs)
     except Exception as exc:
         message = str(exc).lower()
-        if "temperature" in message and "unsupported" in message and "temperature" in request_kwargs:
+        if "unsupported parameter" in message and "temperature" in message:
+            # Defensive fallback for older code paths / env drift.
             request_kwargs.pop("temperature", None)
             try:
                 response = client.responses.create(**request_kwargs)
