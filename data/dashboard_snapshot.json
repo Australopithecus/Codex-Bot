@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-03T21:47:27.574021+00:00",
+  "generated_at": "2026-03-04T21:48:43.367742+00:00",
   "equity": [
     {
       "ts": "2026-02-14T06:05:33.248912+00:00",
@@ -98,10 +98,80 @@
       "cash": 68712.16,
       "portfolio_value": 97797.8,
       "spy_value": 680.29
+    },
+    {
+      "ts": "2026-03-04T21:48:35.114750+00:00",
+      "equity": 98111.05,
+      "cash": 68712.16,
+      "portfolio_value": 98111.05,
+      "spy_value": 685.13
     }
   ],
   "trades": [],
   "positions": [
+    {
+      "symbol": "AAPL",
+      "qty": -44.0,
+      "avg_entry_price": 269.46,
+      "market_value": -11556.7188,
+      "unrealized_pl": 299.5212
+    },
+    {
+      "symbol": "AMZN",
+      "qty": 49.44,
+      "avg_entry_price": 244.412079,
+      "market_value": 10710.849696,
+      "unrealized_pl": -1372.88349
+    },
+    {
+      "symbol": "GOOGL",
+      "qty": 34.927965094,
+      "avg_entry_price": 347.669068,
+      "market_value": 10580.379186,
+      "unrealized_pl": -1562.993885
+    },
+    {
+      "symbol": "JPM",
+      "qty": 38.967531152,
+      "avg_entry_price": 312.773818,
+      "market_value": 11666.878827,
+      "unrealized_pl": -521.144669
+    },
+    {
+      "symbol": "META",
+      "qty": -8.0,
+      "avg_entry_price": 709.26,
+      "market_value": -5339.44,
+      "unrealized_pl": 334.64
+    },
+    {
+      "symbol": "MSFT",
+      "qty": -14.0,
+      "avg_entry_price": 424.549286,
+      "market_value": -5681.9,
+      "unrealized_pl": 261.79
+    },
+    {
+      "symbol": "NVDA",
+      "qty": 64.678629752,
+      "avg_entry_price": 185.675535,
+      "market_value": 11816.785656,
+      "unrealized_pl": -192.453526
+    },
+    {
+      "symbol": "UNH",
+      "qty": -20.0,
+      "avg_entry_price": 285.91,
+      "market_value": -5829.8,
+      "unrealized_pl": -111.6
+    },
+    {
+      "symbol": "XOM",
+      "qty": 86.821158266,
+      "avg_entry_price": 139.21053,
+      "market_value": 13031.855856,
+      "unrealized_pl": 945.436399
+    },
     {
       "symbol": "AAPL",
       "qty": -44.0,
@@ -986,6 +1056,39 @@
     }
   ],
   "advisor_reports": [
+    {
+      "ts": "2026-03-04T21:48:43.055326+00:00",
+      "headline": "Advisor Update",
+      "summary": "5D return -1.04%, 20D return 0.25%, SPY 20D 0.52%, drawdown 1.36%, Top sector: Information Technology (34%)..",
+      "suggestions": [
+        "Portfolio volatility is elevated vs SPY. Reduce leverage or position size.",
+        "Low trade activity: relax thresholds to generate more signals.",
+        "No trades in the last 24h. Verify the bot ran and market data is flowing."
+      ],
+      "metrics": {
+        "ret_5d": -0.010439444504512951,
+        "ret_20d": 0.0025051631886414683,
+        "spy_ret_20d": 0.005164243482343345,
+        "drawdown": 0.013598923931233579,
+        "avg_abs_daily_return": 0.0028775133629558858,
+        "trade_count_24h": 0.0,
+        "reject_rate": 0.0,
+        "notional_24h": 0.0,
+        "factor_mom_20d": -0.017957355953326176,
+        "factor_rank_mom": 0.13807374387425808,
+        "factor_vol_20d": 0.020516603800463388,
+        "spy_mom_20d": -0.006244243474729183,
+        "spy_vol_20d": 0.008349090707297042,
+        "beta": 0.45234513130766213,
+        "max_sector_weight": 0.33701254489172805
+      },
+      "overrides": {
+        "gross_leverage": 1.35,
+        "max_position_pct": 0.054,
+        "min_long_return": 0.0005,
+        "max_short_return": -0.0005
+      }
+    },
     {
       "ts": "2026-03-03T21:47:27.266529+00:00",
       "headline": "Advisor Update",
