@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-12T21:47:02.014431+00:00",
+  "generated_at": "2026-03-13T21:47:50.793050+00:00",
   "equity": [
     {
       "ts": "2026-02-14T06:05:33.248912+00:00",
@@ -147,10 +147,80 @@
       "cash": 68712.16,
       "portfolio_value": 98426.41,
       "spy_value": 666.05
+    },
+    {
+      "ts": "2026-03-13T21:47:44.222862+00:00",
+      "equity": 98698.36,
+      "cash": 68712.16,
+      "portfolio_value": 98698.36,
+      "spy_value": 662.3
     }
   ],
   "trades": [],
   "positions": [
+    {
+      "symbol": "AAPL",
+      "qty": -44.0,
+      "avg_entry_price": 269.46,
+      "market_value": -10995.1512,
+      "unrealized_pl": 861.0888
+    },
+    {
+      "symbol": "AMZN",
+      "qty": 49.44,
+      "avg_entry_price": 244.412079,
+      "market_value": 10252.8672,
+      "unrealized_pl": -1830.865986
+    },
+    {
+      "symbol": "GOOGL",
+      "qty": 34.927965094,
+      "avg_entry_price": 347.669068,
+      "market_value": 10535.322111,
+      "unrealized_pl": -1608.05096
+    },
+    {
+      "symbol": "JPM",
+      "qty": 38.967531152,
+      "avg_entry_price": 312.773818,
+      "market_value": 11028.980342,
+      "unrealized_pl": -1159.043154
+    },
+    {
+      "symbol": "META",
+      "qty": -8.0,
+      "avg_entry_price": 709.26,
+      "market_value": -4897.2,
+      "unrealized_pl": 776.88
+    },
+    {
+      "symbol": "MSFT",
+      "qty": -14.0,
+      "avg_entry_price": 424.549286,
+      "market_value": -5529.3,
+      "unrealized_pl": 414.39
+    },
+    {
+      "symbol": "NVDA",
+      "qty": 64.678629752,
+      "avg_entry_price": 185.675535,
+      "market_value": 11655.089081,
+      "unrealized_pl": -354.150101
+    },
+    {
+      "symbol": "UNH",
+      "qty": -20.0,
+      "avg_entry_price": 285.91,
+      "market_value": -5625.0,
+      "unrealized_pl": 93.2
+    },
+    {
+      "symbol": "XOM",
+      "qty": 86.821158266,
+      "avg_entry_price": 139.21053,
+      "market_value": 13560.59671,
+      "unrealized_pl": 1474.177253
+    },
     {
       "symbol": "AAPL",
       "qty": -44.0,
@@ -1477,6 +1547,42 @@
   ],
   "advisor_reports": [
     {
+      "ts": "2026-03-13T21:47:50.470507+00:00",
+      "headline": "Advisor Update",
+      "summary": "5D return 1.09%, 20D return 0.85%, SPY 20D -2.83%, drawdown 1.52%, alpha 20D 3.68%, tracking error 0.66%, Top sector: Information Technology (34%)..",
+      "suggestions": [
+        "Portfolio volatility is elevated vs SPY. Reduce leverage or position size.",
+        "Outperforming with low drawdown: modestly increase leverage.",
+        "Low trade activity: relax thresholds to generate more signals.",
+        "No trades in the last 24h. Verify the bot ran and market data is flowing."
+      ],
+      "metrics": {
+        "ret_5d": 0.010859494750305343,
+        "ret_20d": 0.008506335405148224,
+        "spy_ret_20d": -0.028329983421604865,
+        "drawdown": 0.01521008193163062,
+        "avg_abs_daily_return": 0.0026628598225505186,
+        "trade_count_24h": 0.0,
+        "alpha_20d": 0.03683631882675309,
+        "tracking_error_20d": 0.006595256548040606,
+        "reject_rate": 0.0,
+        "notional_24h": 0.0,
+        "factor_mom_20d": 0.006545396038096665,
+        "factor_rank_mom": 0.26306265152610947,
+        "factor_vol_20d": 0.01663889124478779,
+        "spy_mom_20d": -0.02773088271994617,
+        "spy_vol_20d": 0.007259170107467408,
+        "beta": 0.4522753849951578,
+        "max_sector_weight": 0.33515349228099833
+      },
+      "overrides": {
+        "gross_leverage": 1.5750000000000002,
+        "max_position_pct": 0.054,
+        "min_long_return": 0.0005,
+        "max_short_return": -0.0005
+      }
+    },
+    {
       "ts": "2026-03-12T21:47:01.623124+00:00",
       "headline": "Advisor Update",
       "summary": "5D return 0.32%, 20D return 0.57%, SPY 20D -2.28%, drawdown 1.52%, alpha 20D 2.86%, tracking error 0.64%, Top sector: Information Technology (34%)..",
@@ -2053,16 +2159,6 @@
     },
     {
       "ts": "2026-02-16T21:42:39.443912+00:00",
-      "headline": "Not enough data",
-      "summary": "Need more equity snapshots before generating a meaningful report.",
-      "suggestions": [
-        "Run daily snapshots and rebalances to build history."
-      ],
-      "metrics": {},
-      "overrides": {}
-    },
-    {
-      "ts": "2026-02-16T20:18:02.532490+00:00",
       "headline": "Not enough data",
       "summary": "Need more equity snapshots before generating a meaningful report.",
       "suggestions": [
